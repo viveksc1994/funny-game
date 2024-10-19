@@ -1,0 +1,26 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevents scrolling */
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+}
+
+.game-area {
+  position: relative;
+  height: 100vh; /* Fullscreen height */
+  width: 100vw; /* Fullscreen width */
+  overflow: hidden; /* Hide overflowing objects */
+}
+
+.character {
+  background-color: blue; /* Change as needed */
+  position: absolute;
+  bottom: 0; /* Stick to the bottom */
+}
