@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
-import backgroundMusic from './jethalal.mp3'; // Import your background music
+import backgroundMusic from './badme.mp3'; // Import your background music
 // Import your character image
 import characterImage from './dancin-monkey.gif'; // Adjust the path as necessary
 import blastImage from './blast.gif'; // Adjust the path as necessary
 
 
-// Constants for game area dimensions and character sizes
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
 const GAME_AREA_WIDTH = window.innerWidth; // Fullscreen width
-let CHARACTER_WIDTH = 100; // Character width
-let CHARACTER_HEIGHT = 100; // Character height
-const OBJECT_SIZE = 70; // Size of falling objects (smaller size)
+const OBJECT_SIZE = 70; // Size of falling objects
 
-// List of funny character images (replace with your own URLs)
 const funnyCharacterImages = [
   '/fruits-1.gif',
   '/fruits-2.gif',
@@ -23,7 +19,6 @@ const funnyCharacterImages = [
   '/fruits-6.gif',
 ];
 
-// List of fire images
 const fireImages = [
   '/fire-flame.gif', // Replace with actual fire image URLs
 ];
@@ -33,6 +28,8 @@ function App() {
   const [fallingObjects, setFallingObjects] = useState([]);
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false); // State to track music playing
+  const audioRef = useRef(null); // Ref to store audio element
 
   // Handle key down events for character movement
   const handleKeyDown = useCallback((event) => {
@@ -89,6 +86,7 @@ function App() {
       ) {
         if (fireImages.includes(obj.image)) {
           setIsGameOver(true); // Game over if touching fire
+          handlePlayMusic();
           // alert(`Game Over! Your score: ${score}`);
           // resetGame(); // Reset game after alert
         } else if (funnyCharacterImages.includes(obj.image)) {
@@ -110,6 +108,7 @@ function App() {
 
   // Reset the game
   const resetGame = () => {
+    audioRef.current.pause();
     setCharacterPosition(GAME_AREA_WIDTH / 2 - CHARACTER_WIDTH / 2);
     setFallingObjects([]);
     setScore(0);
@@ -122,6 +121,14 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
+
+  // Function to play music
+  const handlePlayMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.play(); // Play the music
+      setIsMusicPlaying(true); // Update music state
+    }
+  };
 
   return (
     <div className="App">
@@ -159,7 +166,7 @@ function App() {
           />
         ))}
       </div>
-      <audio src={backgroundMusic} autoPlay loop /> {/* Background music */}
+      <audio ref={audioRef} src={backgroundMusic} loop /> {/* Background music */}
     </div>
   );
 }
