@@ -82,7 +82,7 @@ function App() {
   useEffect(() => {
     fallingObjects.forEach((obj) => {
       if (
-        obj.top + obj.size >= GAME_AREA_HEIGHT - CHARACTER_HEIGHT &&
+        obj.top + obj.size >= GAME_AREA_HEIGHT - 250 &&
         obj.left < characterPosition + CHARACTER_WIDTH &&
         obj.left + obj.size > characterPosition
       ) {
