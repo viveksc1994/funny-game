@@ -24,3 +24,22 @@ body, html {
   position: absolute;
   bottom: 0; /* Stick to the bottom */
 }
+
+/* App.css */
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full height */
+  background-size: cover; /* Cover the entire area */
+  background-position: center; /* Center the image */
+}
+
+.game-area {
+  position: relative;
+  overflow: hidden; /* Hide any overflowing objects */
+  height: 100vh; /* Adjust to your desired height */
+  width: 100vw; /* Adjust to your desired width */
+}
