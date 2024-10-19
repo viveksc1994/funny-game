@@ -4,6 +4,7 @@ import backgroundMusic from './badme.mp3'; // Import your background music
 // Import your character image
 import characterImage from './dancin-monkey.gif'; // Adjust the path as necessary
 import blastImage from './blast.gif'; // Adjust the path as necessary
+import metoDarGaiSound from './metodargai.mp3'; // Import the audio for game over sound
 
 let CHARACTER_WIDTH = 100;
 let CHARACTER_HEIGHT = 100;
@@ -24,6 +25,10 @@ const fireImages = [
   '/fire-flame.gif', // Replace with actual fire image URLs
 ];
 
+const snakeImages = [
+  '/Snake.png', // Replace with actual fire image URLs
+];
+
 function App() {
   const [characterPosition, setCharacterPosition] = useState(GAME_AREA_WIDTH / 2 - CHARACTER_WIDTH / 2);
   const [fallingObjects, setFallingObjects] = useState([]);
@@ -31,6 +36,7 @@ function App() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false); // State to track music playing
   const audioRef = useRef(null); // Ref to store audio element
+  const gameOverAudioRef = useRef(null); // Ref to store audio element
 
   // Handle key down events for character movement
   const handleKeyDown = useCallback((event) => {
@@ -47,12 +53,15 @@ function App() {
     const intervalId = setInterval(() => {
       if (!isGameOver) {
         const isFire = Math.random() < 0.4; // 40% chance to be a fire object
+        const isSnake = Math.random() < 0.2; // 20% chance to be a snake object
         const newObject = {
           id: Math.random(),
           left: Math.random() * (GAME_AREA_WIDTH - OBJECT_SIZE),
           top: 0,
           image: isFire
             ? fireImages[Math.floor(Math.random() * fireImages.length)] // Random fire image
+            : isSnake
+            ? snakeImages[Math.floor(Math.random() * snakeImages.length)] 
             : funnyCharacterImages[Math.floor(Math.random() * funnyCharacterImages.length)], // Random funny image
           size: OBJECT_SIZE,
         };
@@ -90,9 +99,11 @@ function App() {
           handlePlayMusic();
           // alert(`Game Over! Your score: ${score}`);
           // resetGame(); // Reset game after alert
+        }else if (snakeImages.includes(obj.image)){
+          setIsGameOver(true); // Game over if touching fire
+          handlePlayMusicsnake();
         } else if (funnyCharacterImages.includes(obj.image)) {
           // Absorb the object
-          debugger;
           CHARACTER_WIDTH = CHARACTER_WIDTH + 0.001;
           CHARACTER_HEIGHT = CHARACTER_HEIGHT + 0.001;
           const newSize = obj.size + 10; // Increase size of the object
@@ -110,6 +121,7 @@ function App() {
   // Reset the game
   const resetGame = () => {
     audioRef.current.pause();
+    gameOverAudioRef.current.pause();
     setCharacterPosition(GAME_AREA_WIDTH / 2 - CHARACTER_WIDTH / 2);
     setFallingObjects([]);
     setScore(0);
@@ -128,8 +140,19 @@ function App() {
     if (audioRef.current) {
       audioRef.current.play(); // Play the music
       setIsMusicPlaying(true); // Update music state
+    }else{
+      gameOverAudioRef.current.play();
+      setIsMusicPlaying(true); // Update music state
     }
   };
+
+    // Function to play music
+    const handlePlayMusicsnake = () => {
+      if (gameOverAudioRef.current) {
+        gameOverAudioRef.current.play();
+        setIsMusicPlaying(true); // Update music state
+      }
+    };
 
   return (
     <div className="App">
@@ -167,7 +190,8 @@ function App() {
           />
         ))}
       </div>
-      <audio ref={audioRef} src={backgroundMusic} loop /> {/* Background music */}
+      <audio ref={audioRef} src={backgroundMusic}  /> {/* Background music */}
+      <audio ref={gameOverAudioRef} src={metoDarGaiSound} /> {/* Game over sound */}
     </div>
   );
 }
