@@ -1,18 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
+import backgroundMusic from './jethalal.mp3'; // Import your background music
+// Import your character image
+import characterImage from './monkey.png'; // Adjust the path as necessary
 
 // Constants for game area dimensions and character sizes
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
 const GAME_AREA_WIDTH = window.innerWidth; // Fullscreen width
-const CHARACTER_WIDTH = 50; // Character width
-const CHARACTER_HEIGHT = 50; // Character height
+const CHARACTER_WIDTH = 100; // Character width
+const CHARACTER_HEIGHT = 100; // Character height
 const OBJECT_SIZE = 70; // Size of falling objects (smaller size)
 
 // List of funny character images (replace with your own URLs)
 const funnyCharacterImages = [
-  'https://w7.pngwing.com/pngs/311/425/png-transparent-humour-funny-face-youtube-joke-laughter-youtube-comics-face-comic-book-thumbnail.png', // Replace with your funny character image URLs
-  'https://w7.pngwing.com/pngs/311/425/png-transparent-humour-funny-face-youtube-joke-laughter-youtube-comics-face-comic-book-thumbnail.png',
-  'https://w7.pngwing.com/pngs/311/425/png-transparent-humour-funny-face-youtube-joke-laughter-youtube-comics-face-comic-book-thumbnail.png',
+  '/fruits-1.gif',
+  '/fruits-2.gif',
+  '/fruits-3.gif',
+  '/fruits-4.gif',
+  '/fruits-5.gif',
+  '/fruits-6.gif',
+  '/banana.png',
+];
+
+// List of fire images
+const fireImages = [
+  '/fire-flame.gif', // Replace with actual fire image URLs
 ];
 
 function App() {
@@ -35,11 +47,15 @@ function App() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!isGameOver) {
+        const isFire = Math.random() < 0.4; // 40% chance to be a fire object
         const newObject = {
           id: Math.random(),
           left: Math.random() * (GAME_AREA_WIDTH - OBJECT_SIZE),
           top: 0,
-          image: funnyCharacterImages[Math.floor(Math.random() * funnyCharacterImages.length)], // Random image
+          image: isFire
+            ? fireImages[Math.floor(Math.random() * fireImages.length)] // Random fire image
+            : funnyCharacterImages[Math.floor(Math.random() * funnyCharacterImages.length)], // Random funny image
+          size: OBJECT_SIZE,
         };
         setFallingObjects((prev) => [...prev, newObject]);
       }
@@ -66,15 +82,24 @@ function App() {
   useEffect(() => {
     fallingObjects.forEach((obj) => {
       if (
-        obj.top + OBJECT_SIZE >= GAME_AREA_HEIGHT - CHARACTER_HEIGHT &&
+        obj.top + obj.size >= GAME_AREA_HEIGHT - CHARACTER_HEIGHT &&
         obj.left < characterPosition + CHARACTER_WIDTH &&
-        obj.left + OBJECT_SIZE > characterPosition
+        obj.left + obj.size > characterPosition
       ) {
-        setIsGameOver(true);
-        alert(`Game Over! Your score: ${score}`);
-        resetGame(); // Reset game after alert
-      } else if (obj.top >= GAME_AREA_HEIGHT - 20) {
-        setScore((prev) => prev + 1); // Increment score when an object reaches the bottom
+        if (fireImages.includes(obj.image)) {
+          setIsGameOver(true); // Game over if touching fire
+          alert(`Game Over! Your score: ${score}`);
+          resetGame(); // Reset game after alert
+        } else {
+          // Absorb the object
+          const newSize = obj.size + 10; // Increase size of the object
+          setScore((prev) => prev + 1); // Increment score when absorbed
+          setFallingObjects((prev) => 
+            prev.map((item) => 
+              item.id === obj.id ? { ...item, size: newSize, left: item.left - 5 } : item
+            )
+          );
+        }
       }
     });
   }, [fallingObjects, characterPosition, score]);
@@ -102,14 +127,15 @@ function App() {
         {isGameOver ? 'Play Again' : 'Reset Game'}
       </button>
       <div className="game-area" style={{ height: GAME_AREA_HEIGHT, width: GAME_AREA_WIDTH }}>
-        <div
+        <img
           className="character"
+          src={characterImage}
+          alt="Character"
           style={{
             left: `${characterPosition}px`,
             bottom: '0px',
             width: `${CHARACTER_WIDTH}px`,
             height: `${CHARACTER_HEIGHT}px`,
-            backgroundColor: 'blue', // Character color for visibility
             position: 'absolute',
           }}
         />
@@ -118,17 +144,18 @@ function App() {
             key={obj.id}
             className="falling-object"
             src={obj.image}
-            alt="Falling character"
+            alt="Falling object"
             style={{
               left: `${obj.left}px`,
               top: `${obj.top}px`,
-              width: `${OBJECT_SIZE}px`,
-              height: `${OBJECT_SIZE}px`,
+              width: `${obj.size}px`,
+              height: `${obj.size}px`,
               position: 'absolute',
             }}
           />
         ))}
       </div>
+      <audio src={backgroundMusic} autoPlay loop /> {/* Background music */}
     </div>
   );
 }
