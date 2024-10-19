@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import backgroundMusic from './jethalal.mp3'; // Import your background music
 // Import your character image
-import characterImage from './monkey.png'; // Adjust the path as necessary
+import characterImage from './dancin-monkey.gif'; // Adjust the path as necessary
+import blastImage from './blast.gif'; // Adjust the path as necessary
+
 
 // Constants for game area dimensions and character sizes
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
@@ -88,8 +90,8 @@ function App() {
       ) {
         if (fireImages.includes(obj.image)) {
           setIsGameOver(true); // Game over if touching fire
-          alert(`Game Over! Your score: ${score}`);
-          resetGame(); // Reset game after alert
+          // alert(`Game Over! Your score: ${score}`);
+          // resetGame(); // Reset game after alert
         } else {
           // Absorb the object
           const newSize = obj.size + 10; // Increase size of the object
@@ -129,7 +131,7 @@ function App() {
       <div className="game-area" style={{ height: GAME_AREA_HEIGHT, width: GAME_AREA_WIDTH }}>
         <img
           className="character"
-          src={characterImage}
+          src={isGameOver ? blastImage : characterImage}
           alt="Character"
           style={{
             left: `${characterPosition}px`,
