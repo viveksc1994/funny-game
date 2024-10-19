@@ -26,7 +26,7 @@ const fireImages = [
 ];
 
 const snakeImages = [
-  '/Snake.png', // Replace with actual fire image URLs
+  '/snakedance.gif', // Replace with actual fire image URLs
 ];
 
 function App() {
