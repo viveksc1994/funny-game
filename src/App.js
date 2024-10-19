@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
-import backgroundMusic from './jethalal.mp3'; // Import your background music
-// Import your character image
+import backgroundMusic from './jethalalsounds.mp3'; // Import your background music
 import characterImage from './monkey.png'; // Adjust the path as necessary
 
-// Constants for game area dimensions and character sizes
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
 const GAME_AREA_WIDTH = window.innerWidth; // Fullscreen width
 const CHARACTER_WIDTH = 100; // Character width
 const CHARACTER_HEIGHT = 100; // Character height
-const OBJECT_SIZE = 70; // Size of falling objects (smaller size)
+const OBJECT_SIZE = 70; // Size of falling objects
 
-// List of funny character images (replace with your own URLs)
 const funnyCharacterImages = [
   '/fruits-1.gif',
   '/fruits-2.gif',
@@ -22,7 +19,6 @@ const funnyCharacterImages = [
   '/banana.png',
 ];
 
-// List of fire images
 const fireImages = [
   '/fire-flame.gif', // Replace with actual fire image URLs
 ];
@@ -32,6 +28,8 @@ function App() {
   const [fallingObjects, setFallingObjects] = useState([]);
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false); // State to track music playing
+  const audioRef = useRef(null); // Ref to store audio element
 
   // Handle key down events for character movement
   const handleKeyDown = useCallback((event) => {
@@ -119,12 +117,23 @@ function App() {
     };
   }, [handleKeyDown]);
 
+  // Function to play music
+  const handlePlayMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.play(); // Play the music
+      setIsMusicPlaying(true); // Update music state
+    }
+  };
+
   return (
     <div className="App">
       <h1>Dodge the Falling Objects</h1>
       <h2>Score: {score}</h2>
       <button onClick={resetGame} disabled={!isGameOver}>
         {isGameOver ? 'Play Again' : 'Reset Game'}
+      </button>
+      <button onClick={handlePlayMusic} disabled={isMusicPlaying}>
+        Play Music
       </button>
       <div className="game-area" style={{ height: GAME_AREA_HEIGHT, width: GAME_AREA_WIDTH }}>
         <img
@@ -155,7 +164,7 @@ function App() {
           />
         ))}
       </div>
-      <audio src={backgroundMusic} autoPlay loop /> {/* Background music */}
+      <audio ref={audioRef} src={backgroundMusic} loop /> {/* Background music */}
     </div>
   );
 }
