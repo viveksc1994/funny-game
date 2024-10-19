@@ -156,7 +156,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>मार मार साले का खोपडी तोड़</h1>
+      <h1>बचके रहना रे बाबा</h1>
       <h2>कितना खाया: {score}</h2>
       <button onClick={resetGame} disabled={!isGameOver}>
         {isGameOver ? 'Play Again' : 'Reset Game'}
