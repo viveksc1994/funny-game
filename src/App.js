@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
-import backgroundMusic from './jethalal.mp3'; // Import your background music
+import backgroundMusic from './badme.mp3'; // Import your background music
 // Import your character image
 import characterImage from './dancin-monkey.gif'; // Adjust the path as necessary
 import blastImage from './blast.gif'; // Adjust the path as necessary
@@ -89,6 +89,7 @@ function App() {
       ) {
         if (fireImages.includes(obj.image)) {
           setIsGameOver(true); // Game over if touching fire
+          handlePlayMusic();
           // alert(`Game Over! Your score: ${score}`);
           // resetGame(); // Reset game after alert
         } else {
@@ -107,6 +108,7 @@ function App() {
 
   // Reset the game
   const resetGame = () => {
+    audioRef.current.pause();
     setCharacterPosition(GAME_AREA_WIDTH / 2 - CHARACTER_WIDTH / 2);
     setFallingObjects([]);
     setScore(0);
@@ -134,9 +136,6 @@ function App() {
       <h2>Score: {score}</h2>
       <button onClick={resetGame} disabled={!isGameOver}>
         {isGameOver ? 'Play Again' : 'Reset Game'}
-      </button>
-      <button onClick={handlePlayMusic} disabled={isMusicPlaying}>
-        Play Music
       </button>
       <div className="game-area" style={{ height: GAME_AREA_HEIGHT, width: GAME_AREA_WIDTH }}>
         <img
