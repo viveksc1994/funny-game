@@ -5,7 +5,8 @@ import backgroundMusic from './badme.mp3'; // Import your background music
 import characterImage from './dancin-monkey.gif'; // Adjust the path as necessary
 import blastImage from './blast.gif'; // Adjust the path as necessary
 
-
+let CHARACTER_WIDTH = 100;
+let CHARACTER_HEIGHT = 100;
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
 const GAME_AREA_WIDTH = window.innerWidth; // Fullscreen width
 const OBJECT_SIZE = 70; // Size of falling objects
