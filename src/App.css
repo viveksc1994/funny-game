@@ -20,7 +20,7 @@ body, html {
 }
 
 .character {
-  background-color: blue; /* Change as needed */
+  /* Change as needed */
   position: absolute;
   bottom: 0; /* Stick to the bottom */
 }
