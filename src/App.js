@@ -9,8 +9,8 @@ import blastImage from './blast.gif'; // Adjust the path as necessary
 // Constants for game area dimensions and character sizes
 const GAME_AREA_HEIGHT = window.innerHeight; // Fullscreen height
 const GAME_AREA_WIDTH = window.innerWidth; // Fullscreen width
-const CHARACTER_WIDTH = 100; // Character width
-const CHARACTER_HEIGHT = 100; // Character height
+let CHARACTER_WIDTH = 100; // Character width
+let CHARACTER_HEIGHT = 100; // Character height
 const OBJECT_SIZE = 70; // Size of falling objects (smaller size)
 
 // List of funny character images (replace with your own URLs)
@@ -21,7 +21,6 @@ const funnyCharacterImages = [
   '/fruits-4.gif',
   '/fruits-5.gif',
   '/fruits-6.gif',
-  '/banana.png',
 ];
 
 // List of fire images
@@ -92,8 +91,11 @@ function App() {
           setIsGameOver(true); // Game over if touching fire
           // alert(`Game Over! Your score: ${score}`);
           // resetGame(); // Reset game after alert
-        } else {
+        } else if (funnyCharacterImages.includes(obj.image)) {
           // Absorb the object
+          debugger;
+          CHARACTER_WIDTH = CHARACTER_WIDTH + 0.001;
+          CHARACTER_HEIGHT = CHARACTER_HEIGHT + 0.001;
           const newSize = obj.size + 10; // Increase size of the object
           setScore((prev) => prev + 1); // Increment score when absorbed
           setFallingObjects((prev) => 
@@ -104,7 +106,7 @@ function App() {
         }
       }
     });
-  }, [fallingObjects, characterPosition, score]);
+  }, [fallingObjects, characterPosition]);
 
   // Reset the game
   const resetGame = () => {
